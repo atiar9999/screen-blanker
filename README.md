@@ -45,3 +45,7 @@ The installation script handles these automatically, but for reference:
 If you want to change the trigger key or the mouse sensitivity:
 - **Change Key:** Edit `watcher.sh` and replace `KEY_F6` with your preferred key (run `sudo evtest` to find your key codes).
 - **Adjust Sensitivity:** Edit `blanker.py` and change the `dx > 10` threshold in the `handle_mouse` function.
+
+## 📜 License
+
+This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) file for details.

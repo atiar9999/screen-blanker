@@ -1,4 +1,6 @@
-![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+[![Python: 3.x](https://img.shields.io/badge/Language-Python_3-3776AB.svg?logo=python&logoColor=white)](https://python.org)
+[![OS: Linux](https://img.shields.io/badge/OS-Linux-FCC624.svg?logo=linux&logoColor=black)](https://kernel.org)
 
 # Universal Linux F6 Screen Blanker
 
@@ -22,7 +24,7 @@ The installation script handles these automatically, but for reference:
 
 1. **Clone the repository:**
    ```bash
-   git clone 
+   git clone https://github.com/atiar9999/screen-blanker.git
    cd screen-blanker
    ```
 

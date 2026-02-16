@@ -22,6 +22,31 @@ This tool is useful for quickly hiding your screen for privacy or focus.
 
  📦 Installation & Setup
 
+
+ 📋 Requirements
+
+This script requires **Tkinter** (Python GUI library).
+
+### Install Tkinter
+
+#### Debian / Ubuntu
+
+```bash
+sudo apt install python3-tk
+```
+
+#### Fedora
+
+```bash
+sudo dnf install python3-tkinter
+```
+
+#### Arch Linux
+
+```bash
+sudo pacman -S tk
+```
+
 1. Save the Script
 
 Move the script to a permanent directory and make it executable:

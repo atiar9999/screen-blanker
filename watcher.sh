@@ -19,19 +19,33 @@ echo "=========================================="
 echo "$(date '+%H:%M:%S') [INIT] Device: $DEVICE"
 
 # --- 2. Environment Detection ---
-if [ -n "$WAYLAND_DISPLAY" ]; then
-    ENV_VARS="WAYLAND_DISPLAY=$WAYLAND_DISPLAY"
-    ENV_TYPE="Wayland"
-elif [ -n "$DISPLAY" ]; then
-    ENV_VARS="DISPLAY=$DISPLAY"
-    ENV_TYPE="X11"
+if [ -z "$DISPLAY" ] && [ -z "$WAYLAND_DISPLAY" ]; then
+    # Find the user who is currently logged into the graphical session
+    active_user=$(who | grep -m1 '(:[0-9])' | awk '{print $1}')
+    [ -z "$active_user" ] && active_user=$(whoami)
+
+    # Detect Wayland
+    wayland_socket=$(ls /run/user/$(id -u $active_user)/wayland-* 2>/dev/null | head -n 1)
+    
+    if [ -n "$wayland_socket" ]; then
+        export WAYLAND_DISPLAY=$(basename $wayland_socket)
+        export XDG_RUNTIME_DIR="/run/user/$(id -u $active_user)"
+        ENV_TYPE="Wayland (Auto-detected)"
+        ENV_VARS="WAYLAND_DISPLAY=$WAYLAND_DISPLAY XDG_RUNTIME_DIR=$XDG_RUNTIME_DIR"
+    else
+        export DISPLAY=":0"
+        # Grant root permission to open windows on the user's X11 screen
+        xhost +SI:localuser:root > /dev/null 2>&1
+        ENV_TYPE="X11 (Auto-detected)"
+        ENV_VARS="DISPLAY=$DISPLAY"
+    fi
 else
-    ENV_VARS="DISPLAY=:0"
-    ENV_TYPE="X11 (Fallback)"
+    # Variables already exist (manual run)
+    ENV_VARS="DISPLAY=$DISPLAY WAYLAND_DISPLAY=$WAYLAND_DISPLAY XDG_RUNTIME_DIR=$XDG_RUNTIME_DIR"
+    ENV_TYPE="Manual Session"
 fi
 
-echo "$(date '+%H:%M:%S') [INIT] Detected Environment: $ENV_TYPE ($ENV_VARS)"
-echo "$(date '+%H:%M:%S') [INIT] Status: Monitoring for F6..."
+echo "$(date '+%H:%M:%S') [INIT] Detected Environment: $ENV_TYPE"
 
 # --- 3. Monitor and Trigger ---
 

@@ -2,8 +2,6 @@
 
 # --- 1. Tool Check & Installation ---
 echo "Checking for required tools..."
-
-# List of tools we need
 DEPENDENCIES=("evtest" "python3" "python3-tk" "coreutils")
 
 install_tools() {
@@ -18,53 +16,58 @@ install_tools() {
     fi
 }
 
-# Check if each tool is installed
 for tool in "${DEPENDENCIES[@]}"; do
-    if ! command -v $tool &> /dev/null && ! dpkg -s $tool &> /dev/null; then
+    if ! command -v $tool &> /dev/null; then
         echo "Installing missing dependency: $tool"
         install_tools
-        break # Install them all at once
+        break 
     fi
 done
 
-# --- 2. Setup Directories & Files ---
+# --- 2. Setup Directories ---
 BIN_DIR="$HOME/.local/bin"
-SERVICE_DIR="$HOME/.config/systemd/user"
+AUTOSTART_DIR="$HOME/.config/autostart"
 
-mkdir -p "$BIN_DIR" "$SERVICE_DIR"
+mkdir -p "$BIN_DIR" "$AUTOSTART_DIR"
 
-# Move files (assuming they are in the current Documents folder)
+# Move files to local bin
 cp blanker.py "$BIN_DIR/blanker.py"
 cp watcher.sh "$BIN_DIR/watcher.sh"
 chmod +x "$BIN_DIR/blanker.py" "$BIN_DIR/watcher.sh"
 
-# --- 3. Create the Service ---
-cat <<EOF > "$SERVICE_DIR/f6-blanker.service"
-[Unit]
-Description=Universal F6 Screen Blanker
-After=graphical-session.target
+# --- 3. Cleanup Old Systemd Service (If exists) ---
+if [ -f "$HOME/.config/systemd/user/f6-blanker.service" ]; then
+    echo "Cleaning up old systemd service..."
+    systemctl --user stop f6-blanker.service 2>/dev/null
+    systemctl --user disable f6-blanker.service 2>/dev/null
+    rm "$HOME/.config/systemd/user/f6-blanker.service"
+    systemctl --user daemon-reload
+fi
 
-[Service]
-ExecStart=/usr/bin/bash %h/.local/bin/watcher.sh
-Restart=always
-# Crucial: Ensures Tkinter can find your Dell monitor
-Environment=DISPLAY=:0
-
-[Install]
-WantedBy=graphical-session.target
+# --- 4. Create Desktop Autostart Entry ---
+# This works for Xfce, GNOME, KDE, etc.
+cat <<EOF > "$AUTOSTART_DIR/f6-blanker.desktop"
+[Desktop Entry]
+Type=Application
+Name=F6 Screen Blanker
+Comment=Monitors F6 for screen blanking
+Exec=/usr/bin/bash $BIN_DIR/watcher.sh
+Terminal=false
+X-GNOME-Autostart-enabled=true
+X-KDE-autostart-after=panel
+Categories=Utility;
 EOF
 
-# --- 4. Permissions ---
+# --- 5. Permissions ---
 echo "Granting $USER access to hardware input..."
 sudo usermod -a -G input $USER
 
-# --- 5. Final Activation ---
-systemctl --user daemon-reload
-systemctl --user enable f6-blanker.service
-systemctl --user start f6-blanker.service
-
 echo "-------------------------------------------------------"
 echo "INSTALLATION COMPLETE!"
-echo "Please LOG OUT and LOG BACK IN to apply group changes."
-echo "Your MSI Mouse and PC Power K98 will now trigger F6."
+echo "-------------------------------------------------------"
+echo "CRITICAL STEPS FOR SUCCESS:"
+echo "1. LOG OUT and LOG BACK IN (required for input permissions)."
+echo "2. The blanker will now start automatically with your desktop."
+echo "3. To verify it is running after login, use:"
+echo "   ps aux | grep watcher.sh"
 echo "-------------------------------------------------------"

@@ -1,12 +1,12 @@
 
- 🖥️ Screen Blanker (F6 Privacy Shortcut)
+# 🖥️ Screen Blanker (F6 Privacy Shortcut)
 
 A lightweight Python utility that instantly blanks your screen when you press **F6** and automatically restores it when you move your mouse or press any key.
 
 This tool is useful for quickly hiding your screen for privacy or focus.
 
 ---
-✨ Features
+# ✨ Features
 
 * Instant fullscreen black screen overlay
 * Activated with a single key (F6)
@@ -20,10 +20,10 @@ This tool is useful for quickly hiding your screen for privacy or focus.
 
 ---
 
- 📦 Installation & Setup
+# 📦 Installation & Setup
 
 
- 📋 Requirements
+## 📋 Requirements
 
 This script requires **Tkinter** (Python GUI library).
 
@@ -47,7 +47,7 @@ sudo dnf install python3-tkinter
 sudo pacman -S tk
 ```
 
-1. Save the Script
+## 1. Save the Script
 
 Move the script to a permanent directory and make it executable:
 
@@ -58,7 +58,7 @@ chmod +x ~/scripts/screen_blanker.py
 ```
 
 ---
- 2. Assign F6 Keyboard Shortcut (Xfce)
+## 2. Assign F6 Keyboard Shortcut (Xfce)
 
 1. Open **Settings Manager**
 2. Go to **Keyboard**
@@ -82,7 +82,7 @@ python3 /home/goplunaplu/scripts/screen_blanker.py
 
 ---
 
-⚙️ How It Works
+# ⚙️ How It Works
 
 The script:
 
@@ -93,7 +93,7 @@ The script:
 
 ---
 
-🛡️ Use Cases
+# 🛡️ Use Cases
 
 * Short-Break
 * Hide screen during interruptions

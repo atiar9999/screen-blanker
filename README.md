@@ -37,6 +37,33 @@ The installation script handles these automatically, but for reference:
 3. **Finalize:**
    You must log out and log back in (or reboot). This allows the system to apply the new `input` group permissions so the script can read your keyboard events without needing `sudo` every time.
 
+## 🗑 Uninstallation
+If you wish to remove the F6 Screen Blanker from your system, use the provided uninstall script:
+
+1. **Run the uninstaller:**
+   ```bash
+   chmod +x uninstall.sh
+   ./uninstall.sh
+   ```
+
+2. **Manual Cleanup (Optional):**
+   The script removes the autostart entry, the core scripts, and stops the background processes. It does not remove the `python3-tk` or `evtest` packages as they may be used by other applications. To remove those manually:
+   
+- **Fedora:**
+   ```bash
+   sudo dnf remove python3-tkinter evtest
+   ```
+   
+- **Arch:**
+   ```bash
+   sudo pacman -Rns tk evtest
+   ```
+
+- **Debian**
+   ```bash
+   sudo apt remove python3-tk evtest
+   ```
+   
 ## 🖥 How it Works
 1. **Watcher:** A Bash script uses `evtest` to monitor your keyboard's event slot.
 2. **Trigger:** When the hex code for `F6` is detected, it launches the Python script.

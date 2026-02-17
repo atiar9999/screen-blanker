@@ -46,9 +46,15 @@ class UniversalBlanker:
         h = self.root.winfo_screenheight()
         
         # Set geometry AND fullscreen attribute
+        self.root.overrideredirect(True)
         self.root.geometry(f"{w}x{h}+0+0")
-        self.root.attributes('-fullscreen', True)
         self.root.attributes('-topmost', True)
+
+        # 5. Keep the fullscreen attribute for non-KDE environments
+        try:
+            self.root.attributes('-fullscreen', True)
+        except:
+            pass
         
         # Bring it to life
         self.root.deiconify()
